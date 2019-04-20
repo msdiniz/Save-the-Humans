@@ -7,8 +7,84 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    <Page.Resources>
+        <x:String x:Key="AppName">Save the Humans</x:String>
+        <Style x:Key="PageHeaderTextStyle" TargetType = "TextBlock"/>
+        <Style x:Key="BackButtonStyle" TargetType = "Button"/>
+        <Style x:Key="LayoutRootStyle" TargetType = "Panel">
+            <Setter Property="Background"
+		        Value="{ThemeResource ApplicationPageBackgroundThemeBrush}"/>
+            <Setter Property="ChildrenTransitions">
+                <Setter.Value>
+                    <TransitionCollection>
+                        <EntranceThemeTransition/>
+                    </TransitionCollection>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <ControlTemplate x:Key="EnemyTemplate" TargetType="ContentControl">
+            <Grid>
+                <Ellipse Height="100" Margin="0,0,0,0" Width="100" Fill="Red"/>
+            </Grid>
+        </ControlTemplate>
+    </Page.Resources>
+    <!--
+	This grid acts as a root panel for the page that defines two rows:
+	* Row 0 contains the back button and page title
+	* Row 1 contains the rest of the page layout	
+    -->
 
-    <Grid>
+    <Grid Style="{StaticResource LayoutRootStyle}">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="160"/>
+            <ColumnDefinition/>
+            <ColumnDefinition Width="160"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="140"/>
+            <RowDefinition/>
+            <RowDefinition Height="160"/>
+        </Grid.RowDefinitions>
 
+        <!-- Back button and page title -->
+        <Grid Margin="0,0,0,0" Grid.ColumnSpan="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="160"/>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="160"/>
+            </Grid.ColumnDefinitions>
+            <Button x:Name="backButton" Click="GoBack" IsEnabled="{Binding Frame.CanGoBack, ElementName=pageRoot}"/>
+            <TextBlock x:Name="pageTitle" Text="{StaticResource AppName}" Style="{StaticResource SubheaderTextBlockStyle}" Grid.Column="1" IsHitTestVisible="false" HorizontalAlignment="Stretch" Margin="262,0,447,0" VerticalAlignment="Stretch"/>
+        </Grid>
+        <Button x:Name="startButton" Content="Start!" Grid.Column="0" Style="{StaticResource BackButtonStyle}" HorizontalAlignment="Left" Margin="80,68,0,0" Grid.Row="2" VerticalAlignment="Top"/>
+        <StackPanel Grid.Column="2" Orientation="Horizontal" Grid.Row="2" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="16,0,0,0">
+            <TextBlock TextWrapping="Wrap" Text="Avoid These" Style="{StaticResource SubheaderTextBlockStyle}" FontFamily="Segoe UI"/>
+            <ContentControl Template="{StaticResource EnemyTemplate}" Content="ContentControl" FontFamily="Segoe UI"/>
+        </StackPanel>
+        <ProgressBar Grid.Column="1" Grid.Row="2" Height="24"/>
+        <Canvas x:Name="playArea" HorizontalAlignment="Stretch" Margin="0,0,0,0" Grid.Row="1" VerticalAlignment="Stretch" Grid.ColumnSpan="3">
+            <Canvas.Background>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <GradientStop Color="Black"/>
+                    <GradientStop Color="#FFA640EE" Offset="1"/>
+                </LinearGradientBrush>
+            </Canvas.Background>
+            <StackPanel x:Name="human" Orientation="Vertical">
+                <Ellipse Fill="White" Height="10" Width="10"/>
+                <Rectangle Fill="White" Height="25" Width="10"/>
+            </StackPanel>
+            <TextBlock x:Name="gameOverText" Canvas.Left="671" Canvas.Top="169" Text="Game Over" TextWrapping="Wrap" FontFamily="Arial Black" FontSize="72" FontWeight="Bold" FontStyle="Italic"/>
+            <Rectangle x:Name="target" HorizontalAlignment="Stretch" Height="50" Canvas.Left="1092" Canvas.Top="120" VerticalAlignment="Stretch" Width="50" RenderTransformOrigin="0.5,0.5">
+                <Rectangle.FocusVisualPrimaryBrush>
+                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                        <GradientStop Color="Black"/>
+                        <GradientStop Color="#FF554848" Offset="1"/>
+                    </LinearGradientBrush>
+                </Rectangle.FocusVisualPrimaryBrush>
+                <Rectangle.RenderTransform>
+                    <CompositeTransform Rotation="45.0"/>
+                </Rectangle.RenderTransform>
+            </Rectangle>
+        </Canvas>
     </Grid>
 </Page>
