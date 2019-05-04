@@ -18,13 +18,13 @@ using Windows.UI.Xaml.Navigation;
 namespace Save_the_Humans
 {
     /// <summary>
-    ///Fornece o comportamento específico do aplicativo para complementar a classe Application padrão.
+    ///Provides application-specific behavior to supplement the default Application class.
     /// </summary>
     sealed partial class App : Application
     {
         /// <summary>
-        /// Inicializa o objeto singleton do aplicativo.  Esta é a primeira linha de código criado
-        /// executado e, como tal, é o equivalente lógico de main() ou WinMain().
+        /// Initializes the singleton application object.  This is the first line of authored code
+        /// executed, and as such is the logical equivalent of main() or WinMain().
         /// </summary>
         public App()
         {
@@ -33,67 +33,72 @@ namespace Save_the_Humans
         }
 
         /// <summary>
-        /// Chamado quando o aplicativo é iniciado normalmente pelo usuário final.  Outros pontos de entrada
-        /// serão usados, por exemplo, quando o aplicativo for iniciado para abrir um arquivo específico.
+        /// Invoked when the application is launched normally by the end user.  Other entry points
+        /// will be used such as when the application is launched to open a specific file.
         /// </summary>
-        /// <param name="e">Detalhes sobre a solicitação e o processo de inicialização.</param>
+        /// <param name="e">Details about the launch request and process.</param>
         protected override void OnLaunched(LaunchActivatedEventArgs e)
         {
+#if DEBUG
+            if (System.Diagnostics.Debugger.IsAttached)
+            {
+                this.DebugSettings.EnableFrameRateCounter = true;
+            }
+#endif
             Frame rootFrame = Window.Current.Content as Frame;
 
-            // Não repita a inicialização do aplicativo quando a Janela já tiver conteúdo,
-            // apenas verifique se a janela está ativa
+            // Do not repeat app initialization when the Window already has content,
+            // just ensure that the window is active
             if (rootFrame == null)
             {
-                // Crie um Quadro para atuar como o contexto de navegação e navegue para a primeira página
+                // Create a Frame to act as the navigation context and navigate to the first page
                 rootFrame = new Frame();
+                // Set the default language
+                rootFrame.Language = Windows.Globalization.ApplicationLanguages.Languages[0];
 
                 rootFrame.NavigationFailed += OnNavigationFailed;
 
                 if (e.PreviousExecutionState == ApplicationExecutionState.Terminated)
                 {
-                    // TODO: Carregue o estado do aplicativo suspenso anteriormente
+                    //TODO: Load state from previously suspended application
                 }
 
-                // Coloque o quadro na Janela atual
+                // Place the frame in the current Window
                 Window.Current.Content = rootFrame;
             }
 
-            if (e.PrelaunchActivated == false)
+            if (rootFrame.Content == null)
             {
-                if (rootFrame.Content == null)
-                {
-                    // Quando a pilha de navegação não for restaurada, navegar para a primeira página,
-                    // configurando a nova página passando as informações necessárias como um parâmetro
-                    // parâmetro
-                    rootFrame.Navigate(typeof(MainPage), e.Arguments);
-                }
-                // Verifique se a janela atual está ativa
-                Window.Current.Activate();
+                // When the navigation stack isn't restored navigate to the first page,
+                // configuring the new page by passing required information as a navigation
+                // parameter
+                rootFrame.Navigate(typeof(MainPage), e.Arguments);
             }
+            // Ensure the current window is active
+            Window.Current.Activate();
         }
 
         /// <summary>
-        /// Chamado quando ocorre uma falha na Navegação para uma determinada página
+        /// Invoked when Navigation to a certain page fails
         /// </summary>
-        /// <param name="sender">O Quadro com navegação com falha</param>
-        /// <param name="e">Detalhes sobre a falha na navegação</param>
+        /// <param name="sender">The Frame which failed navigation</param>
+        /// <param name="e">Details about the navigation failure</param>
         void OnNavigationFailed(object sender, NavigationFailedEventArgs e)
         {
             throw new Exception("Failed to load Page " + e.SourcePageType.FullName);
         }
 
         /// <summary>
-        /// Chamado quando a execução do aplicativo está sendo suspensa.  O estado do aplicativo é salvo
-        /// sem saber se o aplicativo será encerrado ou retomado com o conteúdo
-        /// da memória ainda intacto.
+        /// Invoked when application execution is being suspended.  Application state is saved
+        /// without knowing whether the application will be terminated or resumed with the contents
+        /// of memory still intact.
         /// </summary>
-        /// <param name="sender">A fonte da solicitação de suspensão.</param>
-        /// <param name="e">Detalhes sobre a solicitação de suspensão.</param>
+        /// <param name="sender">The source of the suspend request.</param>
+        /// <param name="e">Details about the suspend request.</param>
         private void OnSuspending(object sender, SuspendingEventArgs e)
         {
             var deferral = e.SuspendingOperation.GetDeferral();
-            //TODO: Salvar o estado do aplicativo e parar qualquer atividade em segundo plano
+            //TODO: Save application state and stop any background activity
             deferral.Complete();
         }
     }
